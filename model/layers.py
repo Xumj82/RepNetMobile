@@ -31,6 +31,7 @@ def feature_encoder(x, trainalbe = True,backbone_shape=(96,96)):
     input = tf.keras.Input(x.shape[1:], batch_size=x.shape[0],name='feature_encoder_input')
     y = tf.reshape(input, [-1, input.shape[2], input.shape[3], input.shape[4]])
     y = tf.image.resize(y, backbone_shape)
+    y = tf.keras.applications.mobilenet_v2.preprocess_input(y)
     y = backbone(y)(y)
     h = tf.shape(y)[1]
     w = tf.shape(y)[2]
