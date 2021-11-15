@@ -1,0 +1,35 @@
+video:
+  num_frames: 64
+  width: 224
+  height: 224
+---
+model:
+  lstm_dim: 400
+  fc1_dim: 600
+  fc2_dim: 601 # num_freq
+---
+prepocess:
+  train_vids: '/mnt/RepNetData/data/synthvids/'
+  train_vids_size: 3000
+  test_vids: '/mnt/RepNetData/data/trainvids'
+  test_labels: '/mnt/RepNetData/data/trainvids/countix_df.csv'
+  test_vids_size: 100
+  mask_images: '/mnt/RepNetData/masks/'
+  mask_layer_num: 3
+  cpu_num: 12
+---
+data:
+  train_dir: '/mnt/RepNetData/train_data/'
+  test_dir: '/mnt/RepNetData/test_data/'
+---
+train:
+  train_sample_size: 100
+  test_sample_size: 10
+  batch_size: 2 #based on your GPU memerory
+  epochs: 100
+  summary_interval: 1
+  checkpoint_interval: 10
+---
+log:
+  chkpt_dir: "/mnt/RepNetData/ckpt/repnet-mbl.ckpt"
+  log_dir: '/mnt/RepNetData/logs/'

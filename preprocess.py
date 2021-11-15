@@ -17,7 +17,12 @@ if __name__ == '__main__':
     hp = HParam('config/default.yaml')
     # synthetic_data_process_mobile(hp.prepocess.train_vids,hp.data.train_dir,sample_size=hp.prepocess.train_vids_size, start_idx=0)
     # combined_data_preprocess(hp.prepocess.test_vids, hp.prepocess.test_labels,save_path=hp.data.test_dir,sample_size=hp.prepocess.test_vids_size,start_idx = 0)
-    generator = SyntheticDataGenerator(hp.prepocess.train_vids,hp.prepocess.mask_images,hp.data.train_dir,sample_size=100, start_idx=0,cpu_num=6)
+    generator = SyntheticDataGenerator(hp.prepocess.train_vids,
+                                        hp.prepocess.mask_images,
+                                        hp.data.train_dir,
+                                        sample_size=hp.prepocess.train_vids_size, 
+                                        start_idx=0,
+                                        cpu_num=hp.prepocess.cpu_num)
     generator.view_test_vid('C:/Users/11351/Desktop/test.avi')
     generator.generate()
     # view_synthetix_vid('G:/RepNet/data/synthvids/','G:/RepNet/data/masks/','C:/Users/11351/Desktop/test.avi')
