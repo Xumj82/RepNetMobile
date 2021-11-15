@@ -2,3 +2,7 @@ ckpt/
 logs/
 model/__pycache__
 Datasets/__pycache__
+004459_synthetic_data.pickle
+005266_synthetic_data.pickle
+005992_synthetic_data.pickle
+005991_synthetic_data.pickle

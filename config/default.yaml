@@ -25,7 +25,7 @@ data:
 train:
   train_sample_size: 100
   test_sample_size: 10
-  batch_size: 1 #based on your GPU memerory
+  batch_size: 2 #based on your GPU memerory
   epochs: 100
   summary_interval: 1
   checkpoint_interval: 10

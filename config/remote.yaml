@@ -9,27 +9,28 @@ model:
   fc2_dim: 601 # num_freq
 ---
 prepocess:
-  train_vids: '/mnt/RepNetData/data/synthvids/'
-  train_vids_size: 3000
+  train_vids: 'data/synthvids/'
+  train_vids_size: 1000
   test_vids: '/mnt/RepNetData/data/trainvids'
   test_labels: '/mnt/RepNetData/data/trainvids/countix_df.csv'
   test_vids_size: 100
   mask_images: '/mnt/RepNetData/masks/'
   mask_layer_num: 3
-  cpu_num: 12
+  cpu_num: 24
 ---
 data:
   train_dir: '/mnt/RepNetData/train_data/'
   test_dir: '/mnt/RepNetData/test_data/'
 ---
 train:
-  train_sample_size: 100
+  train_sample_size: 6000
   test_sample_size: 10
-  batch_size: 1 #based on your GPU memerory
+  batch_size: 2 #based on your GPU memerory
   epochs: 100
   summary_interval: 1
   checkpoint_interval: 10
+  backbone_size: 128
 ---
 log:
-  chkpt_dir: "/mnt/RepNetData/ckpt/repnet-mbl.ckpt"
-  log_dir: '/mnt/RepNetData/logs/'
+  chkpt_dir: "ckpt/repnet-mbl.ckpt"
+  log_dir: '/mnt/RepNetData/logs/2021-11-16/'
