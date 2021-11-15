@@ -27,7 +27,7 @@ train_dataset = load_dataset(TRAIN_DATA_PATH,sample_size=SAMPLE_SIZE,mode ='all'
 test_dataset = load_dataset(TEST_DATA_PATH,sample_size=TEST_SAMPLE_SIZE,mode ='all', onehot=False).take(TEST_SAMPLE_SIZE).batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
 log_writer = MyWriter(LOG_DIR)
 
-model = rep_net_mobile(input_shape=INPUT_SHAPE)
+model = rep_net_mobile(input_shape=INPUT_SHAPE,backbone_shape=(hp.train.backbone_size,hp.train.backbone_size))
 model.summary()
 
 
@@ -71,7 +71,7 @@ for epoch in range(EPOCHS):
         loss_tracker2.update_state(loss2)
         metric_tracker1.update_state(y_true1, periodicity)
         metric_tracker2.update_state(y_true2, with_in_period)
-        if (step+1) % hp.train.data.summary_interval == 0:
+        if (step+1) % hp.train.summary_interval == 0:
             log_writer.log_training(loss_tracker.result(),loss_tracker1.result(),loss_tracker2.result(),metric_tracker1.result(),metric_tracker2.result(),int(epoch*SAMPLE_SIZE/BATCH_SIZE+step))
         print("epoch {0} train step {1} --- periodicity_loss : {2}  with_in_periody_loss : {3}".format(epoch,step,loss_tracker1.result(),loss_tracker2.result()))
     for step,(x, y_true1, y_true2) in enumerate(test_dataset):

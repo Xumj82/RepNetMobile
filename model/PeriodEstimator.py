@@ -16,15 +16,15 @@ cce = tf.keras.losses.CategoricalCrossentropy()
 bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 mae = tf.keras.losses.MeanAbsoluteError()
 
-def rep_net_mobile(input_shape, ) -> Model:
+def rep_net_mobile(input_shape, backbone_shape) -> Model:
     input = tf.keras.Input(input_shape[1:], input_shape[0], name="video_input")
-    y = feature_encoder(input,backbone_shape=input_shape[2:-1])(input) # (batch*frames, h, w, c1)
+    y = feature_encoder(input,backbone_shape=backbone_shape)(input) # (batch*frames, h, w, c1)
     y = reduce_temporal_feature(y)(y) # (batch, frames, c2)
     sim = y = self_similarity(y)(y) # (batch, frames, frames, 1)
     y = period_embedding(y)(y) # (batch, frames, embeddings)
     periodicity = periodicity_classifier(y)(y) # (batch, frames, frames//2)
     with_in_period = with_in_period_classifier(y)(y) # (batch, frames, 1)
-    model =  PeriodEstimator2([input], [periodicity, with_in_period, sim],name='period_estimator')
+    model =  Model([input], [periodicity, with_in_period, sim],name='period_estimator')
     return model
 
 def rep_net_mobile_sim(input_shape,) -> Model:

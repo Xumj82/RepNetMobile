@@ -215,8 +215,7 @@ def get_mask(path):
         all_masks.append(mask)
     return all_masks
 
-def op_tf(frame,seq,length,tran_type, delta_degree,delta_tran, delta_zoom):
-    mid_pos = tf.random.uniform(shape=(), minval=10, maxval=length-10, dtype=tf.int32)
+def op_tf(mid_pos,frame,seq,length,tran_type, delta_degree,delta_tran, delta_zoom):
     param = tf.cast(tf.cond(tf.less_equal(seq,mid_pos), lambda:seq*1/mid_pos, lambda:1-2*(seq-mid_pos)/(length-mid_pos)), dtype=tf.float32)
     frame = tf.case(
         [(tf.math.equal(tran_type, 'rotation'), lambda:rotation(frame,delta_degree,param)), 
@@ -231,17 +230,18 @@ def op_tf(frame,seq,length,tran_type, delta_degree,delta_tran, delta_zoom):
     return frame
 
 def random_transform(images,tran_type,delta_degree,delta_tran, delta_zoom):
-  idxes = tf.range(tf.shape(images)[0], dtype=tf.int32)
-  length_row = tf.constant(tf.shape(images)[0], shape=(tf.shape(images)[0]), dtype=tf.int32)
-  tran_type_row = tf.constant(tran_type, shape=(tf.shape(images)[0]), dtype=tf.string)
-  delta_degree_row = tf.constant(delta_degree, shape=(tf.shape(images)[0]), dtype=tf.float32)
-  delta_tran_row = tf.constant(delta_tran, shape=(tf.shape(images)[0]), dtype=tf.float32)
-  delta_zoom_row = tf.constant(delta_zoom, shape=(tf.shape(images)[0]), dtype=tf.float32)
+  mid_pos = tf.random.uniform(shape=(), minval=10, maxval=tf.shape(images)[0]-10, dtype=tf.int32)
+  # idxes = tf.range(tf.shape(images)[0], dtype=tf.int32)
+  # length_row = tf.constant(tf.shape(images)[0], shape=(tf.shape(images)[0]), dtype=tf.int32)
+  # tran_type_row = tf.constant(tran_type, shape=(tf.shape(images)[0]), dtype=tf.string)
+  # delta_degree_row = tf.constant(delta_degree, shape=(tf.shape(images)[0]), dtype=tf.float32)
+  # delta_tran_row = tf.constant(delta_tran, shape=(tf.shape(images)[0]), dtype=tf.float32)
+  # delta_zoom_row = tf.constant(delta_zoom, shape=(tf.shape(images)[0]), dtype=tf.float32)
   
   seq = 0
+  
   while seq < len(images):
-      b = lambda x: op_tf(x[0][seq],x[1][seq],x[2][seq],x[3][seq],x[4][seq],x[5][0],x[6][seq])
-      images[seq] = b((images, idxes,length_row,tran_type_row,delta_degree_row,delta_tran_row,delta_zoom_row))
+      images[seq] = op_tf(mid_pos,images[seq],seq,tf.shape(images)[0],tran_type,delta_degree,delta_tran,delta_zoom)
       seq +=1
   return images
 
@@ -272,6 +272,16 @@ class SyntheticDataGenerator():
   def view_test_vid(self,output=None):
     # path = path.decode('utf-8')
     frames, y1, y2, y = self.get_rep_video()
+    frames = tf.cast(frames,dtype=tf.uint8)
+    if output:
+      write_video(frames,1,self.output_size[0],self.output_size[1],path = output)
+      print(tf.argmax(y1, axis=-1))
+      print(tf.squeeze(y2,axis=-1))
+
+  def view_pickle_vid(self,pickle_path,output=None):
+    # path = path.decode('utf-8')
+    with open(pickle_path, 'rb') as f:
+        frames, y1, y2 = pickle.load(f)
     frames = tf.cast(frames,dtype=tf.uint8)
     if output:
       write_video(frames,1,self.output_size[0],self.output_size[1],path = output)
