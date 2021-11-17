@@ -23,6 +23,7 @@ if __name__ == '__main__':
                                         sample_size=hp.prepocess.train_vids_size, 
                                         start_idx=46,
                                         cpu_num=hp.prepocess.cpu_num)
+    generator.generate()
     # generator.view_test_vid('C:/Users/11351/Desktop/test.avi')
-    generator.view_pickle_vid('ckpt/000855_synthetic_data.pickle','C:/Users/11351/Desktop/test.avi')
+    #     generator.view_pickle_vid('ckpt/000855_synthetic_data.pickle','C:/Users/11351/Desktop/test.avi')
     # view_synthetix_vid('G:/RepNet/data/synthvids/','G:/RepNet/data/masks/','C:/Users/11351/Desktop/test.avi')
